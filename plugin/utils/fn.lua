@@ -12,7 +12,6 @@ local Kanagawa = G["kanagawa.wezterm"]
 
 ---User defined utility functions
 ---@class Utils.Fn
----@field fs    Utils.Fn.FileSystem
 ---@field color Utils.Fn.Color
 local M = {}
 
@@ -41,92 +40,12 @@ M.tbl_merge = function(t1, ...)
   return t1
 end
 
----Memoize the function return value in the given `wezterm.GLOBAL` key
----@param key string key in which to memoize fn return value
----@param value any function to memoize
----@return any value function that returns the cached value
-M.gmemoize = function(key, value)
-  local is_fn = type(value) == "function"
-  if G[key] == nil then
-    G[key] = is_fn and value() or value
-  end
-  return is_fn and function()
-    return G[key]
-  end or value
-end
-
 ---Wrapper for require to use locally
 ---@param module string
 ---@return unknown, unknown|nil
 M.lrequire = function(module)
   return require(Kanagawa.component .. ".plugin." .. module)
 end
-
--- {{{1 Utils.Fn.FileSystem
-
----@class Utils.Fn.FileSystem
----@field private target_triple string
-M.fs = {}
-
-M.fs.target_triple = M.gmemoize("target_triple", wt.target_triple)
-
--- {{{2 META
-
----@class Utils.Fn.FileSystem.Platform
----@field os "windows"|"linux"|"mac"|"unknown" The operating system name
----@field is_win boolean Whether the platform is Windows.
----@field is_linux boolean Whether the platform is Linux.
----@field is_mac boolean Whether the platform is Mac.
-
--- }}}
-
----Determines the platform based on the target triple.
----
----This function checks the target triple string to determine if the platform is Windows,
----Linux, or macOS.
----
----@return Utils.Fn.FileSystem.Platform platform
-M.fs.platform = M.gmemoize("plaftorm", function()
-  local is_win = M.fs.target_triple:find "windows" ~= nil
-  local is_linux = M.fs.target_triple:find "linux" ~= nil
-  local is_mac = M.fs.target_triple:find "apple" ~= nil
-  local os = is_win and "windows" or is_linux and "linux" or is_mac and "mac" or "unknown"
-  return { os = os, is_win = is_win, is_linux = is_linux, is_mac = is_mac }
-end)
-
-local is_win = M.fs.platform().is_win
-
----Path separator based on the platform.
----
----This variable holds the appropriate path separator character for the current platform.
-M.fs.path_separator = M.gmemoize("path_separator", is_win and "\\" or "/")
-
----Loads the plugin submodules that would otherwise not be loaded
----@param Plugin Plugin
----@return nil
-M.fs.load_submodules = function(Plugin)
-  local plugins = wt.plugin.list()
-  for i = 1, #plugins do
-    if plugins[i].url == Plugin.url then
-      Plugin.dir = plugins[i].plugin_dir
-      Plugin.component = plugins[i].component
-      break
-    end
-  end
-
-  if not Plugin.dir or not Plugin.component then
-    return wt.log_error { [Plugin.name] = "Unable to find plugin!" }
-  end
-
-  if is_win then
-    local plugin_dir = Plugin.dir:gsub("\\[^\\]*$", "")
-    package.path = package.path .. ";" .. plugin_dir .. "\\?.lua"
-  else
-    local plugin_dir = Plugin.dir:gsub("/[^/]*$", "")
-    package.path = package.path .. ";" .. plugin_dir .. "/?.lua"
-  end
-end
--- }}}
 
 -- {{{1 Utils.Fn.Color
 
@@ -149,7 +68,7 @@ M.color = {}
 ---    background = "#222222"
 ---  }
 ---}
----M.color.set_tab_button(config, theme)
+---color.set_tab_button(config, theme)
 ---```
 ---
 ---@param config table The configuration object to be updated with tab button styles.
