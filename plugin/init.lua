@@ -3,10 +3,10 @@ local wt = require "wezterm"
 local plugin = wt.plugin.list()[1]
 if wt.target_triple:find "windows" ~= nil then
   local plugin_dir = plugin.plugin_dir:gsub("\\[^\\]*$", "")
-  package.path = package.path .. ";" .. plugin_dir .. "\\?."
+  package.path = package.path .. ";" .. plugin_dir .. "\\?.lua"
 else
   local plugin_dir = plugin.plugin_dir:gsub("/[^/]*$", "")
-  package.path = package.path .. ";" .. plugin_dir .. "/?."
+  package.path = package.path .. ";" .. plugin_dir .. "/?.lua"
 end
 
 local function lquire(module)
