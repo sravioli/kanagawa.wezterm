@@ -11,14 +11,14 @@ local M = {}
 wt.GLOBAL["kanagawa.wezterm"] = {
   name = "kanagawa.wezterm",
   url = "https://www.github.com/sravioli/kanagawa.wezterm",
-  component = "httpssCssZssZswwwsDsgithubsDscomsZssraviolisZskanagawasDswezterm",
+  component = nil,
   dir = nil,
 }
 
 ---@class Plugin
 ---@field name string
 ---@field url string
----@field component string
+---@field component nil|string
 ---@field dir nil|string
 local Kanagawa = wt.GLOBAL["kanagawa.wezterm"]
 -- }}}
