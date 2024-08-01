@@ -1,0 +1,1 @@
+return { scheme = "kanagawa-wave" }

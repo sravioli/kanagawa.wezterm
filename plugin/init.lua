@@ -1,24 +1,38 @@
+---@module "kanagawa.wezterm"
+---@author sravioli
+---@license GNU-GPLv3
+
 local wt = require "wezterm"
 
-local plugin = wt.plugin.list()[1]
-if wt.target_triple:find "windows" ~= nil then
-  local plugin_dir = plugin.plugin_dir:gsub("\\[^\\]*$", "")
-  package.path = package.path .. ";" .. plugin_dir .. "\\?.lua"
-else
-  local plugin_dir = plugin.plugin_dir:gsub("/[^/]*$", "")
-  package.path = package.path .. ";" .. plugin_dir .. "/?.lua"
-end
+-- {{{1 class: Plugin
 
-local function lquire(module)
-  return require(plugin.component .. "." .. module)
-end
+wt.GLOBAL["kanagawa.wezterm"] = {
+  name = "kanagawa.wezterm",
+  url = "https://www.github.com/sravioli/kanagawa.wezterm",
+  component = nil,
+  dir = nil,
+}
+
+---@class Plugin
+---@field name string
+---@field url string
+---@field component nil|string
+---@field dir nil|string
+local Kanagawa = wt.GLOBAL["kanagawa.wezterm"]
+-- }}}
+
+---@class Utils.Fn
+local fn = require(Kanagawa.component .. ".plugin.utils.fn")
 
 local M = {}
 
-local wave = lquire "plugin.schemes.kanagawa-wave"
+local options = { scheme = "kanagawa-wave" }
 
-M.apply_to_config = function(Config)
-  return Config
+M.apply_to_config = function(Config, opts)
+  opts = fn.tbl_merge(options, opts or {})
+  local theme = fn.lrequire("schemes." .. opts.scheme)
+  fn.color.set_scheme(Config, theme)
+  fn.color.set_tab_button(Config, theme)
 end
 
 return M

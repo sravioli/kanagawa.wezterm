@@ -1,5 +1,5 @@
 ---Ported from: https://github.com/rebelot/kanagawa.nvim
----@module "plugin.schemes.kanagawa-wave"
+---@module "schemes.kanagawa-wave"
 ---@author sravioli
 ---@license GNU-GPLv3
 
