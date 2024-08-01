@@ -9,20 +9,21 @@ local wt = require "wezterm"
 wt.GLOBAL["kanagawa.wezterm"] = {
   name = "kanagawa.wezterm",
   url = "https://www.github.com/sravioli/kanagawa.wezterm",
-  component = nil,
+  component = "httpssCssZssZswwwsDsgithubsDscomsZssraviolisZskanagawasDswezterm",
   dir = nil,
 }
 
 ---@class Plugin
 ---@field name string
 ---@field url string
----@field component nil|string
+---@field component string
 ---@field dir nil|string
 local Kanagawa = wt.GLOBAL["kanagawa.wezterm"]
 -- }}}
 
 ---@class Utils.Fn
 local fn = require(Kanagawa.component .. ".plugin.utils.fn")
+fn.fs.load_submodules(Kanagawa)
 
 local M = {}
 
