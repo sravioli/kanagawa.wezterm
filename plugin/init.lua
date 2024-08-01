@@ -60,7 +60,7 @@ local options = { scheme = "kanagawa-wave" }
 M.apply_to_config = function(Config, opts)
   opts = fn.tbl_merge(options, opts or {})
   local theme = lrequire("schemes." .. opts.scheme)
-  fn.color.set_scheme(Config, theme)
+  fn.color.set_scheme(Config, theme, opts.scheme)
 end
 
 return M
